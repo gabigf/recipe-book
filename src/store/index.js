@@ -40,6 +40,9 @@ export default createStore({
     ]
   },
   mutations: {
+    ADD_RECIPE (state, recipe) {
+      state.recipes.push(recipe);
+    }
   },
   actions: {
   },

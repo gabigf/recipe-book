@@ -3,6 +3,20 @@
     <h1>My Recipes</h1>
     <button @click="togglePopup">Add new Recipe</button>
 
+    <div class="recipes">
+      <div
+        class="card"
+        v-for="recipe in $store.state.recipes"
+        :key="recipe.slug"
+      >
+        <h2>{{ recipe.title }}</h2>
+        <p>{{ recipe.description }}</p>
+        <router-link :to="`/recipe/${recipe.slug}`">
+          <button>View recipe</button>
+        </router-link>
+      </div>
+    </div>
+
     <div class="add-recipe-popup" v-if="popupOpen">
       <div class="popup-content">
         <h2>Add new recipe</h2>
@@ -20,18 +34,18 @@
 
           <div class="group">
             <label>Ingredients</label>
-            <div class="ingredient">
-              <input type="text" />
+            <div class="ingredient" v-for="i in newRecipe.ingredientRows" :key="i">
+              <input type="text" v-model="newRecipe.ingredients[i - 1]" />
             </div>
-            <button type="button">Add Ingredient</button>
+            <button type="button" @click="addNewIngredient">Add Ingredient</button>
           </div>
 
           <div class="group">
             <label>Method</label>
-            <div class="method">
-              <textarea></textarea>
+            <div class="method" v-for="i in newRecipe.methodRows" :key="i">
+              <textarea v-model="newRecipe.methods[i - 1]"></textarea>
             </div>
-            <button>Add step</button>
+            <button @click="addNewStep">Add step</button>
           </div>
 
           <button type="submit">Add Recipe</button>
@@ -43,33 +57,42 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref } from "vue";
 
 export default {
-  name: 'Home',
-  setup () {
+  name: "Home",
+  setup() {
     const newRecipe = ref({
       title: "",
-      description: '',
+      description: "",
       ingredients: [],
-      method: [],
+      methods: [],
       ingredientRows: 1,
-      methodRows: 1
+      methodRows: 1,
     });
     const popupOpen = ref(false);
 
     const togglePopup = () => {
       popupOpen.value = !popupOpen.value;
-    }
+    };
 
+    const addNewIngredient = () => {
+      newRecipe.value.ingredientRows++;
+    };
+
+    const addNewStep = () => {
+      newRecipe.value.methodRows++;
+    };
 
     return {
       newRecipe,
       togglePopup,
-      popupOpen
-    }
-  }
-}
+      popupOpen,
+      addNewIngredient,
+      addNewStep
+    };
+  },
+};
 </script>
 
 <style>
